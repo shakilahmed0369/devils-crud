@@ -13,7 +13,8 @@ class CrudDataTableCommand extends GeneratorCommand
      */
     protected $signature = 'crud:datatable
                             {name : The name of the table.}
-                            {--fields= : The fields for the model.}';
+                            {--fields= : The fields for the model.}
+                            {--route-name= : The route name.}';
 
     /**
      * The console command description.
@@ -65,8 +66,10 @@ class CrudDataTableCommand extends GeneratorCommand
 
         $name = $this->argument('name');
         // $fields = $this->option('fillable');
+        $routeName = $this->option('route-name');
 
         $ret = $this->replaceModel($stub, $name)
+            ->replaceRouteName($stub, $routeName)
             ->sendFileToPath($stub, $name);
 
         return $ret;
@@ -76,6 +79,13 @@ class CrudDataTableCommand extends GeneratorCommand
     protected function replaceModel(&$stub, $name)
     {
         $stub = str_replace('{{ModelName}}', $name, $stub);
+
+        return $this;
+    }
+
+    protected function replaceRouteName(&$stub, $routeName)
+    {
+        $stub = str_replace('{{routeName}}', $routeName, $stub);
 
         return $this;
     }

@@ -21,7 +21,12 @@ class {{ModelName}}DataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', 'test.action');
+            ->addColumn('action', function ($action) {
+                return '<a class="btn-sm btn-primary" href="' . url('{{routeName}}/'.$action->id.'/edit') . '"><i class="far fa-edit"></i></a>
+                        <a class="btn-sm btn-danger delete" href="' . url('{{routeName}}/'.$action->id.'') . '"><i class="far fa-trash-alt"></i></a>';
+            })
+
+            ->rawColumns(['action']);
     }
 
     /**
@@ -47,7 +52,7 @@ class {{ModelName}}DataTable extends DataTable
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')
-                    ->orderBy(1)
+                    ->orderBy(0)
                     ->buttons(
                         Button::make('create'),
                         Button::make('export'),
@@ -65,14 +70,8 @@ class {{ModelName}}DataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
             Column::make('id'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+            Column::computed('action')
         ];
     }
 
